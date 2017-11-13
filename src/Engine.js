@@ -4,12 +4,14 @@
 Lyngk.Color = {BLACK: 0, IVORY: 1, BLUE: 2, RED: 3, GREEN: 4, WHITE: 5};
 
 Lyngk.Engine = function () {
-    var listePiece = [];
+    var listPiece = [];
     var tableau = [];
-    this.placer = function (pionColor, inter) {
-        var piece = new Lyngk.Piece;
-        listePiece.push(piece.setColor(pionColor));
-        inter.setColor(pionColor);
+    var color = [8, 8, 8, 8, 8, 3];
+
+    this.placer = function (pieceColor, inter) {
+        var piece = new Lyngk.Piece();
+        listPiece.push(piece.setColor(pieceColor));
+        inter.setColor(pieceColor);
         inter.setHauteur(1);
         switch (inter.getState()) {
             case Lyngk.State.VACANT :
@@ -19,73 +21,76 @@ Lyngk.Engine = function () {
                 inter.setState(Lyngk.State.STACK);
                 break;
         }
-        if (listePiece.length === 5) {
+        if (listPiece.length === 5) {
             inter.setState(Lyngk.State.FULL_STACK);
         }
-    }
+    };
 
+    this.initPlateau = function (intersection) {
+        var Flag = true;
+        if (intersection.getState() === Lyngk.State.ONE_PIECE) {
+            intersection.setHauteur(1);
+            tableau.push(intersection)
+        } else {
+            Flag = false;
+        }
+        return Flag;
+    };
 
     this.plateau = function () {
-        var colonesLettres = "ABCDEFGHI";
-        var coordonnee;
+        var coordinate;
         var intersection;
-        var couleurAlea = 0;
-        var couleur = [8, 8, 8, 8, 8, 3];
-        for (var i in colonesLettres) {
-            for (var j = 1; j < 10; j++) {
-                coordonnee = new Lyngk.Coordinates(colonesLettres[i], j);
-                if (coordonnee.coordValable() === true) {
-                    intersection = new Lyngk.Intersection(coordonnee);
-                    while (couleur[couleurAlea] <= 0) {
-                        couleurAlea = rand();
-                    }
-                    couleur[couleurAlea]--;
-                    this.placer(couleurAlea, intersection);
-                    if (intersection.getState() === Lyngk.State.ONE_PIECE) {
-                        intersection.setHauteur(1);
-                        tableau.push(intersection);
-                        return true;
-                    } else {
-                        return false;
-                    }
-
+        var randomColor = 0;
+        var Flag;
+        for (var i = "A"; i < "J";i++) {
+            for (var j = 1; j < 10; j += 1) {
+                coordinate = new Lyngk.Coordinates(i, j);
+                if (coordinate.validCoordinate() === true) {
+                    intersection = new Lyngk.Intersection(coordinate);
+                    do{
+                        randomColor = this.rand();
+                    }while(color[randomColor] <= 0);
+                    color[randomColor]--;
+                    this.placer(randomColor, intersection);
+                    Flag = this.initPlateau(intersection);
                 }
             }
         }
-        if (couleur == 0) {
-            return true;
-        }
-    }
+
+        return Flag;
+    };
+
+
 
     this.rand = function () {
         return Math.floor(Math.random() * 6);
-    }
+    };
 
     this.remove = function (j) {
         var tab = this.plateauInter();
-        for (var i = 0; i < tab.length; i++) {
-            if (tab[i] == j) {
+        for (var i = 0; i < tab.length; i += 1) {
+            if (tab[i] === j) {
                 delete tab[i];
                 j.setState(Lyngk.State.VACANT);
             }
         }
 
-    }
+    };
 
     this.plateauInter = function () {
         return tableau;
-    }
+    };
 
-    this.deplacer = function (depart, arrivee) {
-        var coord1 = depart.getCoord();
-        var coord2 = arrivee.getCoord();
-        if ((arrivee.getState() !== Lyngk.State.VACANT && depart.getHauteur() < 5 && coord1.coordValable() && coord2.coordValable())) {
-            this.placer(depart.getColor(), arrivee);
-            var hauteur = depart.getHauteur();
-            var hauteur2 = arrivee.getHauteur();
-            arrivee.setHauteur(hauteur + hauteur2);
-            depart.setState(Lyngk.State.VACANT);
+    this.move = function (firstCoordinate, secondCoordinate) {
+        var coordinate1 = firstCoordinate.getCoordinate();
+        var coordinate2 = secondCoordinate.getCoordinate();
+        if (secondCoordinate.getState() !== Lyngk.State.VACANT && firstCoordinate.getHauteur() < 5 && coordinate1.validCoordinate() && coordinate2.validCoordinate()) {
+            this.placer(firstCoordinate.getColor(), secondCoordinate);
+            var hauteur = firstCoordinate.getHauteur();
+            var hauteur2 = secondCoordinate.getHauteur();
+            secondCoordinate.setHauteur(hauteur + hauteur2);
+            firstCoordinate.setState(Lyngk.State.VACANT);
         }
 
-    }
+    };
 };

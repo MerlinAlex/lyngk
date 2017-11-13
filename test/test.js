@@ -1,10 +1,10 @@
-'use strict';
+"use strict";
 
 var LyngkTestCase = TestCase("LyngkTestCase");
 
 LyngkTestCase.prototype.test1 = function () {
     var coordonnee = new Lyngk.Coordinates("A", 1);
-    assertTrue(coordonnee.notValable() == false);
+    assertTrue(coordonnee.notValid() == false);
 }
 
 LyngkTestCase.prototype.test2 = function () {
@@ -14,7 +14,7 @@ LyngkTestCase.prototype.test2 = function () {
     for (var i = 0; i < 9; i++) {
         for (var j = 0; j < 9; j++) {
             coord = new Lyngk.Coordinates(colones[i], j + 1);
-            if (coord.coordValable() == true) {
+            if (coord.validCoordinate() == true) {
                 cpt++;
             }
         }
@@ -39,14 +39,14 @@ LyngkTestCase.prototype.test5 = function () {
     var coord = new Lyngk.Coordinates("A", 1);
     var coord2 = coord.clone();
 
-    assertTrue(coord.getColones() == coord2.getColones() && coord.getlignes() == coord2.getlignes());
+    assertTrue(coord.getColumn() == coord2.getColumn() && coord.getLine() == coord2.getLine());
 }
 
 LyngkTestCase.prototype.test6 = function () {
     var coord = new Lyngk.Coordinates("A", 3);
     var coord2 = new Lyngk.Coordinates("B", 4);
 
-    if (coord.coordValable() && coord2.coordValable()) {
+    if (coord.validCoordinate() && coord2.validCoordinate()) {
         var h1 = coord.hash();
         var h2 = coord2.hash();
         assertTrue(h1 != h2 && h1 == 12);
@@ -94,7 +94,10 @@ LyngkTestCase.prototype.test11 = function () {
     assertTrue(engine.plateau());
 }
 
-
+LyngkTestCase.prototype.test12 = function () {
+    var engine = new Lyngk.Engine();
+    assertTrue(engine.plateau());
+}
 
 LyngkTestCase.prototype.test13 = function () {
     var engine = new Lyngk.Engine();
@@ -122,7 +125,7 @@ LyngkTestCase.prototype.test15 = function () {
     var inter2 = new Lyngk.Intersection(coord2);
     engine.placer(Lyngk.Color.BLUE, inter1);
     engine.placer(Lyngk.Color.RED, inter2);
-    engine.deplacer(inter1, inter2);
+    engine.move(inter1, inter2);
 
     assertTrue(inter1.getColor() === inter2.getColor() && inter1.getState() === Lyngk.State.VACANT);
 
@@ -139,8 +142,8 @@ LyngkTestCase.prototype.test16 = function () {
     engine.placer(Lyngk.Color.BLUE, inter1);
     engine.placer(Lyngk.Color.RED, inter2);
     engine.placer(Lyngk.Color.GREEN, inter3);
-    engine.deplacer(inter1, inter2);
-    engine.deplacer(inter2, inter3);
+    engine.move(inter1, inter2);
+    engine.move(inter2, inter3);
 
 
     assertTrue(inter2.getColor() === inter3.getColor() && inter2.getState() === Lyngk.State.VACANT && inter3.getHauteur() === 3);
@@ -154,8 +157,8 @@ LyngkTestCase.prototype.test17 = function () {
     var inter2 = new Lyngk.Intersection(coord2);
     engine.placer(Lyngk.Color.BLUE, inter1);
     engine.placer(Lyngk.Color.RED, inter2);
-    engine.deplacer(inter1, inter2);
-    engine.deplacer(inter2, inter1);
+    engine.move(inter1, inter2);
+    engine.move(inter2, inter1);
     assertTrue(inter1.getState() === Lyngk.State.VACANT);
 }
 
@@ -179,11 +182,11 @@ LyngkTestCase.prototype.test20 = function () {
     engine.placer(Lyngk.Color.RED, inter4);
     engine.placer(Lyngk.Color.RED, inter5);
     engine.placer(Lyngk.Color.RED, inter6);
-    engine.deplacer(inter1, inter2);
-    engine.deplacer(inter2, inter3);
-    engine.deplacer(inter3, inter4);
-    engine.deplacer(inter4, inter5);
-    engine.deplacer(inter5, inter6);
+    engine.move(inter1, inter2);
+    engine.move(inter2, inter3);
+    engine.move(inter3, inter4);
+    engine.move(inter4, inter5);
+    engine.move(inter5, inter6);
     assertTrue(inter6.getHauteur() === 1);
 }
 
@@ -198,8 +201,8 @@ LyngkTestCase.prototype.test21 = function () {
     engine.placer(Lyngk.Color.BLUE, inter1);
     engine.placer(Lyngk.Color.RED, inter2);
     engine.placer(Lyngk.Color.GREEN, inter3);
-    engine.deplacer(inter1, inter2);
-    engine.deplacer(inter3, inter2);
+    engine.move(inter1, inter2);
+    engine.move(inter3, inter2);
 
 
     assertTrue(inter2.getHauteur() === 2);
@@ -225,10 +228,10 @@ LyngkTestCase.prototype.test22 = function () {
     engine.placer(Lyngk.Color.RED, inter4);
     engine.placer(Lyngk.Color.RED, inter5);
 
-    engine.deplacer(inter1, inter2);
-    engine.deplacer(inter3, inter4);
-    engine.deplacer(inter4, inter5);
-    engine.deplacer(inter2, inter5);
+    engine.move(inter1, inter2);
+    engine.move(inter3, inter4);
+    engine.move(inter4, inter5);
+    engine.move(inter2, inter5);
 
     assertTrue(inter2.getHauteur() === 2);
 }

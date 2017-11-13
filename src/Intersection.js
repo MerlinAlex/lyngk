@@ -5,34 +5,34 @@ Lyngk.State = {VACANT: 0, ONE_PIECE: 1, STACK: 2, FULL_STACK: 3};
 Lyngk.Intersection = function (c) {
 
 
-    var cpt = 0;
-    var etat = Lyngk.State.VACANT;
+
+    var startState = Lyngk.State.VACANT;
     var color;
     var hauteur = 0;
 
     this.getHauteur = function () {
         return hauteur;
-    }
+    };
     this.getState = function () {
-        return etat;
-    }
+        return startState;
+    };
     this.getColor = function () {
         return color;
-    }
+    };
 
-    this.setHauteur = function (haut) {
-        hauteur = haut;
-    }
+    this.setHauteur = function (height) {
+        hauteur = height;
+    };
 
     this.setColor = function (col) {
         color = col;
-    }
+    };
 
     this.setState = function (state) {
-        etat = state;
-    }
+        startState = state;
+    };
 
-    this.getCoord = function () {
+    this.getCoordinate = function () {
         return c;
-    }
+    };
 };

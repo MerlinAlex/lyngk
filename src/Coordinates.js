@@ -4,14 +4,14 @@ Lyngk.Coordinates = function (c, l) {
     this.c = c;
     this.l = l;
 
-    this.notValable = function () {
+    this.notValid = function () {
         if (c === "A" && l === 1) {
             return false;
         }
-    }
+    };
 
-    this.coordValable = function () {
-        var coordVal = {
+    this.validCoordinate = function () {
+        var coordinate = {
             "A": [3, 3],
             "B": [2, 5],
             "C": [1, 7],
@@ -22,36 +22,32 @@ Lyngk.Coordinates = function (c, l) {
             "H": [4, 7],
             "I": [7, 7]
         };
-        if (l >= coordVal[c][0] && l <= coordVal[c][1]) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+        return l >= coordinate[c][0] && l <= coordinate[c][1];
+    };
 
     this.toString = function () {
-        if (this.coordValable() == false) {
+        if (this.validCoordinate() === false) {
             return "invalid";
         } else {
             return c + l;
         }
-    }
+    };
 
-    this.getColones = function () {
+    this.getColumn = function () {
         return c;
-    }
-    this.getlignes = function () {
+    };
+    this.getLine = function () {
         return l;
-    }
+    };
 
 
     this.clone = function () {
         return new Lyngk.Coordinates(c, l);
-    }
+    };
 
     this.hash = function () {
         return (((c.charCodeAt(0) - 64) * 9) + l);
-    }
+    };
 
-}
+};
 

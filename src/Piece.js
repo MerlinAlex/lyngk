@@ -5,7 +5,7 @@ Lyngk.Piece = function (c) {
 
     this.setColor = function (color) {
         c = color;
-    }
+    };
 
 
 };
